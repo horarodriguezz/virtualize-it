@@ -1,0 +1,22 @@
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: darkslateblue;
+  height: 100vh;
+  overflow: hidden;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 500px;
+  height: 750px;
+  border: 1px solid white;
+}
