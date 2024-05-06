@@ -8,11 +8,28 @@ It provides the following components:
 - `DynamicList`: A list component that renders items of varying heights/widths.
 - `VirtualizedGrid`: A grid component that renders a large number of rows and columns efficiently.
 
-## Props
+<br>
 
-### FixedList
+## Contents
 
-#### FixedListProps
+- [Virtualized List and Grid Component](#virtualized-list-and-grid-component)
+  - [FixedList](#fixedlist)
+    - [FixedListProps](#fixedlistprops)
+    - [FixedList - Usage](#fixedlist---usage)
+  - [DynamicList](#dynamiclist)
+    - [DynamicListProps](#dynamiclistprops)
+    - [DynamicList - Usage](#dynamiclist---usage)
+  - [VirtualizedGrid](#virtualizedgrid)
+    - [VirtualizedGridProps](#virtualizedgridprops)
+    - [VirtualizedGrid - Usage](#virtualizedgrid---usage)
+
+<br>
+
+## FixedList
+
+<br>
+
+### FixedListProps
 
 | Prop          | Type                      | Default    | Description                                                  | Required |
 | ------------- | ------------------------- | ---------- | ------------------------------------------------------------ | -------- |
@@ -25,7 +42,9 @@ It provides the following components:
 | itemSize      | number                    | -          | The height of each item in the list                          |          |
 | orientation   | "vertical" \| "horizontal | "vertical" | The orientation of the list                                  |          |
 
-#### FixedList - Usage
+<br>
+
+### FixedList - Usage
 
 The `FixedList` component is used to render a list of items where each item has a fixed height/width. It can be an horizontal or vertical list.
 The `itemSize` prop is required when using the `FixedList` component. The `itemSize` prop specifies the height or width (depending on the orientation) of each item in the list.
@@ -71,9 +90,13 @@ function MainComponent() {
 }
 ```
 
-### DynamicListProps
+<br>
 
-#### DynamicListProps
+## DynamicListProps
+
+<br>
+
+### DynamicListProps
 
 | Prop          | Type          | Default    | Description                                                  | Required |
 | ------------- | ------------- | ---------- | ------------------------------------------------------------ | -------- |
@@ -86,7 +109,9 @@ function MainComponent() {
 | gap           | number        | 0          | The gap between each item in the list                        |          |
 | orientation   | string        | "vertical" | The orientation of the list                                  |          |
 
-#### DynamicList - Usage
+<br>
+
+### DynamicList - Usage
 
 The `DynamicList` component is used to render a list of items where each item has a varying height/width. It can be an horizontal or vertical list. It is thinked to be used in list where the items have
 different heights/widths based on the type or content of the item.
@@ -164,9 +189,13 @@ function MainComponent() {
 }
 ```
 
-### VirtualizedGrid
+<br>
 
-#### VirtualizedGridProps
+## VirtualizedGrid
+
+<br>
+
+### VirtualizedGridProps
 
 | Prop                | Type   | Default | Description                                                 | Required |
 | ------------------- | ------ | ------- | ----------------------------------------------------------- | -------- |
@@ -181,7 +210,9 @@ function MainComponent() {
 | rowGap              | number | 0       | The gap between each row in the grid                        |          |
 | columnGap           | number | 0       | The gap between each column in the grid                     |          |
 
-#### VirtualizedGrid - Usage
+<br>
+
+### VirtualizedGrid - Usage
 
 The `VirtualizedGrid` component is used to render a grid of items where each item has a fixed height/width.
 The children of the `VirtualizedGrid` component should be a 2D array where each element in the outer array represents a row and each element in the inner array represents a column.
@@ -226,6 +257,8 @@ function MainComponent() {
   );
 }
 ```
+
+<br>
 
 ## Caveats
 
