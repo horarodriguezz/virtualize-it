@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import styles from "../styles.module.css";
 import { VirtualizedGridProps } from "../types";
 import useElementSize from "../../hooks/use-element-size/useElementSize";
 
@@ -24,8 +23,9 @@ function Grid(props: VirtualizedGridProps) {
 
   const containerStyle = useMemo(
     () => ({
-      width,
-      height,
+      width: width ?? "100%",
+      height: height ?? "100%",
+      overflow: "auto",
     }),
     [width, height]
   );
@@ -87,14 +87,17 @@ function Grid(props: VirtualizedGridProps) {
   );
 
   return (
-    <div ref={ref} style={containerStyle} className={styles["list-root"]}>
+    <div ref={ref} style={containerStyle} className={"list-root"}>
       <div
         style={{
           height: wrapperHeight,
           width: wrapperWidth,
           flexDirection: "column",
+          display: "flex",
+          position: "relative",
+          overflow: "hidden",
         }}
-        className={styles["list-root__wrapper"]}
+        className={"list-root__wrapper"}
       >
         {visibleNodes}
       </div>

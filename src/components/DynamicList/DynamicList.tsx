@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { DynamicListProps } from "../types";
 import useElementSize from "../../hooks/use-element-size/useElementSize";
-import styles from "../styles.module.css";
 import calculateNodesPosition from "../../functions/calculateNodesPosition";
 import findFirstAfter from "../../functions/findFirstAfter";
 
@@ -40,12 +39,16 @@ function List(dynamicListProps: DynamicListProps) {
     height: isVertical ? wrapperSize : "100%",
     width: orientation === "horizontal" ? wrapperSize : "100%",
     flexDirection: orientation === "horizontal" ? "row" : "column",
+    display: "flex",
+    position: "relative",
+    overflow: "hidden",
   };
 
   const containerStyle = useMemo(
     () => ({
-      width,
-      height,
+      width: width ?? "100%",
+      height: height ?? "100%",
+      overflow: "auto",
     }),
     [width, height]
   );
@@ -78,12 +81,8 @@ function List(dynamicListProps: DynamicListProps) {
     );
 
   return (
-    <div
-      style={containerStyle}
-      className={styles["list-root"]}
-      ref={elementRef}
-    >
-      <div style={wrapperStyles} className={styles["list-root__wrapper"]}>
+    <div style={containerStyle} className={"list-root"} ref={elementRef}>
+      <div style={wrapperStyles} className={"list-root__wrapper"}>
         {visibleChildren}
       </div>
     </div>

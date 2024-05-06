@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 
 import { FixedListProps } from "../types";
 
-import styles from "../styles.module.css";
 import useElementSize from "../../hooks/use-element-size/useElementSize";
 
 function List(dynamicListProps: FixedListProps) {
@@ -33,19 +32,23 @@ function List(dynamicListProps: FixedListProps) {
 
   const containerStyle = useMemo(
     () => ({
-      width,
-      height,
+      width: width ?? "100%",
+      height: height ?? "100%",
+      overflow: "auto",
     }),
     [width, height]
   );
 
   const wrapperStyles = useMemo((): React.CSSProperties => {
-    const wrapperHeight = totalElements * itemSize + (totalElements - 1) * gap;
+    const wrapperSize = totalElements * itemSize + (totalElements - 1) * gap;
 
     return {
-      height: isVertical ? wrapperHeight : "100%",
-      width: !isVertical ? wrapperHeight : "100%",
+      height: isVertical ? wrapperSize : "100%",
+      width: !isVertical ? wrapperSize : "100%",
       flexDirection: !isVertical ? "row" : "column",
+      display: "flex",
+      position: "relative",
+      overflow: "hidden",
     };
   }, [totalElements, itemSize, gap, isVertical]);
 
@@ -79,12 +82,8 @@ function List(dynamicListProps: FixedListProps) {
     );
 
   return (
-    <div
-      style={containerStyle}
-      className={styles["list-root"]}
-      ref={elementRef}
-    >
-      <div style={wrapperStyles} className={styles["list-root__wrapper"]}>
+    <div style={containerStyle} className={"list_root"} ref={elementRef}>
+      <div style={wrapperStyles} className={"list-root__wrapper"}>
         {visibleNodes}
       </div>
     </div>

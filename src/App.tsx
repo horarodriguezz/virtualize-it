@@ -1,7 +1,4 @@
 import "./App.css";
-import { FixedList } from "./components/FixedList/FixedList";
-import { DynamicList } from "./components/DynamicList/DynamicList";
-import TestingDummyComponent from "./components/TestingDummyComponent";
 import { useState } from "react";
 import { VirtualizedGrid } from "./components/Grid/Grid";
 

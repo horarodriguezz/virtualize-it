@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ElementSize, UseElementSizeResult } from "./types";
 
 const initialSize: ElementSize = {
@@ -13,13 +13,13 @@ const initialSize: ElementSize = {
  * and it will also update the size of the element when the window is resized
  */
 export default function useElementSize(): UseElementSizeResult {
-  const elementRef = useRef<HTMLDivElement>(null);
-  const animationFrame = useRef<number | null>(null);
+  const elementRef = React.useRef<HTMLDivElement>(null);
+  const animationFrame = React.useRef<number | null>(null);
 
   const [size, setSize] = useState<ElementSize>(initialSize);
 
   const handleResize = useCallback(() => {
-    if (animationFrame.current) {
+    if (animationFrame?.current) {
       cancelAnimationFrame(animationFrame.current);
     }
 
