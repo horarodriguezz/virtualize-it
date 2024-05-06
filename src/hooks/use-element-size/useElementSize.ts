@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ElementSize, UseElementSizeResult } from "./types";
-import useThrottledFunction from "../use-throttled-callback/useThrottledCallback";
 
 const initialSize: ElementSize = {
   width: 0,
@@ -14,18 +13,25 @@ const initialSize: ElementSize = {
  */
 export default function useElementSize(): UseElementSizeResult {
   const elementRef = useRef<HTMLDivElement>(null);
+  const animationFrame = useRef<number | null>(null);
 
   const [size, setSize] = useState<ElementSize>(initialSize);
 
-  const handleResize = useThrottledFunction(() => {
-    if (elementRef.current) {
-      setSize({
-        width: elementRef.current.offsetWidth,
-        height: elementRef.current.offsetHeight,
-        scrollTop: elementRef.current.scrollTop,
-      });
+  const handleResize = useCallback(() => {
+    if (animationFrame.current) {
+      cancelAnimationFrame(animationFrame.current);
     }
-  }, 50);
+
+    animationFrame.current = requestAnimationFrame(() => {
+      if (elementRef.current) {
+        setSize({
+          width: elementRef.current.offsetWidth,
+          height: elementRef.current.offsetHeight,
+          scrollTop: elementRef.current.scrollTop,
+        });
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const element = elementRef.current;
@@ -45,6 +51,10 @@ export default function useElementSize(): UseElementSizeResult {
     return () => {
       element?.removeEventListener("scroll", handleResize);
     };
+  }, [handleResize]);
+
+  useEffect(() => {
+    handleResize();
   }, [handleResize]);
 
   return [size, elementRef];
