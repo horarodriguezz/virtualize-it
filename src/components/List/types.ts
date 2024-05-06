@@ -33,7 +33,9 @@ export interface StaticListProps extends BaseListProps {
   /**
    * @prop rowHeight - The height of each item in the list
    */
-  rowHeight: number;
+  itemSize: number;
+
+  orientation?: ListOrientation;
 }
 
 export interface DynamicListProps extends BaseListProps {
@@ -42,4 +44,8 @@ export interface DynamicListProps extends BaseListProps {
    * @param index - The index of the item in the list
    */
   getItemSize: (index: number) => number;
+
+  orientation?: ListOrientation;
 }
+
+export type ListOrientation = "vertical" | "horizontal";

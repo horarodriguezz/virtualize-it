@@ -5,6 +5,7 @@ const initialSize: ElementSize = {
   width: 0,
   height: 0,
   scrollTop: 0,
+  scrollLeft: 0,
 };
 
 /**
@@ -28,6 +29,7 @@ export default function useElementSize(): UseElementSizeResult {
           width: elementRef.current.offsetWidth,
           height: elementRef.current.offsetHeight,
           scrollTop: elementRef.current.scrollTop,
+          scrollLeft: elementRef.current.scrollLeft,
         });
       }
     });

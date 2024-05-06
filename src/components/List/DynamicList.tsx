@@ -12,12 +12,35 @@ function List(dynamicListProps: DynamicListProps) {
     height,
     gap,
     overscanCount = 3,
+    orientation = "vertical",
     getItemSize,
   } = dynamicListProps;
 
-  const [{ scrollTop, height: containerHeight }, elementRef] = useElementSize();
+  const isVertical = orientation === "vertical";
+
+  const [
+    { scrollTop, scrollLeft, width: containerWidth, height: containerHeight },
+    elementRef,
+  ] = useElementSize();
 
   const nodesPosition = calculateNodesPosition(children, gap, getItemSize);
+
+  const containerSize = useMemo(
+    () => (isVertical ? containerHeight : containerWidth),
+    [containerHeight, containerWidth, isVertical]
+  );
+
+  const scroll = isVertical ? scrollTop : scrollLeft;
+
+  const wrapperSize =
+    nodesPosition[nodesPosition.length - 1] +
+    getItemSize(nodesPosition.length - 1);
+
+  const wrapperStyles: React.CSSProperties = {
+    height: isVertical ? wrapperSize : "100%",
+    width: orientation === "horizontal" ? wrapperSize : "100%",
+    flexDirection: orientation === "horizontal" ? "row" : "column",
+  };
 
   const containerStyle = useMemo(
     () => ({
@@ -27,21 +50,10 @@ function List(dynamicListProps: DynamicListProps) {
     [width, height]
   );
 
-  const wrapperStyles = {
-    height:
-      nodesPosition[nodesPosition.length - 1] +
-      getItemSize(nodesPosition.length - 1),
-  };
-
-  const firstVisibleNode = findFirstAfter(scrollTop, nodesPosition);
+  const firstVisibleNode = findFirstAfter(scroll, nodesPosition);
   const startNode = Math.max(0, firstVisibleNode - overscanCount);
 
-  const lastVisibleNode = findFirstAfter(
-    scrollTop + containerHeight,
-    nodesPosition
-  );
-
-  console.log("lastVisibleNode", lastVisibleNode);
+  const lastVisibleNode = findFirstAfter(scroll + containerSize, nodesPosition);
 
   const endNode = Math.min(
     children.length - 1,
@@ -58,7 +70,9 @@ function List(dynamicListProps: DynamicListProps) {
           position: "absolute",
           top: 0,
           left: 0,
-          transform: `translateY(${nodesPosition[startNode + index]}px)`,
+          transform: isVertical
+            ? `translateY(${nodesPosition[startNode + index]}px)`
+            : `translateX(${nodesPosition[startNode + index]}px)`,
         },
       })
     );

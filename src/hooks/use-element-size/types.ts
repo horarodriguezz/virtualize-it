@@ -4,6 +4,8 @@ export interface ElementSize {
   height: number;
 
   scrollTop: number;
+
+  scrollLeft: number;
 }
 
 export type UseElementSizeResult = [

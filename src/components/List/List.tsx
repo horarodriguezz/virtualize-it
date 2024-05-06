@@ -12,11 +12,22 @@ function List(dynamicListProps: StaticListProps) {
     height,
     overscanCount = 3,
     totalElements,
-    rowHeight,
+    itemSize,
     gap = 0,
+    orientation = "vertical",
   } = dynamicListProps;
 
-  const [{ scrollTop, height: containerHeight }, elementRef] = useElementSize();
+  const [
+    { scrollTop, scrollLeft, height: containerHeight, width: containerWidth },
+    elementRef,
+  ] = useElementSize();
+
+  const containerSize = useMemo(
+    () => (orientation === "vertical" ? containerHeight : containerWidth),
+    [containerHeight, containerWidth, orientation]
+  );
+
+  const scroll = orientation === "vertical" ? scrollTop : scrollLeft;
 
   const containerStyle = useMemo(
     () => ({
@@ -26,23 +37,26 @@ function List(dynamicListProps: StaticListProps) {
     [width, height]
   );
 
-  const wrapperStyles = useMemo(
-    () => ({
-      height: totalElements * rowHeight + (totalElements - 1) * gap,
-    }),
-    [totalElements, rowHeight, gap]
-  );
+  const wrapperStyles = useMemo((): React.CSSProperties => {
+    const wrapperHeight = totalElements * itemSize + (totalElements - 1) * gap;
 
-  const itemHeight = rowHeight + gap;
+    return {
+      height: orientation === "vertical" ? wrapperHeight : "100%",
+      width: orientation === "horizontal" ? wrapperHeight : "100%",
+      flexDirection: orientation === "horizontal" ? "row" : "column",
+    };
+  }, [totalElements, itemSize, gap, orientation]);
+
+  const totalItemSize = itemSize + gap;
 
   const startNode = Math.max(
     0,
-    Math.floor(scrollTop / itemHeight) - overscanCount
+    Math.floor(scroll / totalItemSize) - overscanCount
   );
 
   const nodesCount = Math.min(
     totalElements - startNode,
-    Math.ceil(containerHeight / itemHeight) + overscanCount * 2
+    Math.ceil(containerSize / totalItemSize) + overscanCount * 2
   );
 
   const visibleNodes = children
@@ -55,8 +69,10 @@ function List(dynamicListProps: StaticListProps) {
           position: "absolute",
           top: 0,
           left: 0,
-          transform: `translateY(${(startNode + index) * itemHeight}px)`,
-          height: `${rowHeight}px`,
+          transform:
+            orientation === "vertical"
+              ? `translateY(${(startNode + index) * totalItemSize}px)`
+              : `translateX(${(startNode + index) * totalItemSize}px)`,
         },
       })
     );
