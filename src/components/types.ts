@@ -49,3 +49,50 @@ export interface DynamicListProps extends BaseListProps {
 }
 
 export type ListOrientation = "vertical" | "horizontal";
+
+export interface VirtualizedGridProps
+  extends Pick<BaseListProps, "width" | "height" | "children"> {
+  /**
+   * @prop rowHeight - The height of each row in the grid
+   */
+  rowHeight: number;
+
+  /**
+   * @prop columnWidth - The width of each column in the grid
+   */
+  columnWidth: number;
+
+  /**
+   * @prop totalRows - The total number of rows in the grid
+   */
+  totalRows: number;
+
+  /**
+   * @prop totalColumns - The total number of columns in the grid
+   */
+  totalColumns: number;
+
+  /**
+   * @prop rowGap - The gap between each row in the grid
+   * @default 0
+   **/
+  rowGap?: number;
+
+  /**
+   * @prop columnGap - The gap between each column in the grid
+   * @default 0
+   */
+  columnGap?: number;
+
+  /**
+   * @prop rowOverscanCount - The number of rows to render outside of the visible area
+   * @default 3
+   */
+  rowOverscanCount?: number;
+
+  /**
+   * @prop columnOverscanCount - The number of columns to render outside of the visible area
+   * @default 1
+   */
+  columnOverscanCount?: number;
+}

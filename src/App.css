@@ -18,8 +18,8 @@ body main {
 }
 
 body main section {
-  width: 750px;
-  height: 300px;
+  width: 500px;
+  height: 750px;
   border: 1px solid white;
   overflow-y: auto;
   overflow-x: hidden;

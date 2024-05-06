@@ -1,6 +1,9 @@
 import "./App.css";
 import { FixedList } from "./components/FixedList/FixedList";
 import { DynamicList } from "./components/DynamicList/DynamicList";
+import TestingDummyComponent from "./components/TestingDummyComponent";
+import { useState } from "react";
+import { VirtualizedGrid } from "./components/Grid/Grid";
 
 const fieldTypeMap = {
   TEXT: 150,
@@ -16,57 +19,48 @@ const fieldTypeMap = {
 } as const;
 
 const mockedRandomData = [...Array(100)].map((_, index) => ({
-  id: index,
+  id: `Name ${index}`,
   name: `Name ${index}`,
   type: Object.keys(fieldTypeMap)[
     index % Object.keys(fieldTypeMap).length
   ] as keyof typeof fieldTypeMap,
+  items: [...Array(100)].map((_, i) => ({
+    id: `Item ${i} - row ${index}`,
+    name: `Item ${i} - row ${index}`,
+  })),
 }));
 
 function App() {
+  const [rows] = useState(mockedRandomData);
+
   return (
     <main>
       <section>
-        <FixedList
-          itemSize={100}
-          totalElements={100}
-          gap={20}
-          orientation='horizontal'
+        <VirtualizedGrid
+          rowHeight={100}
+          columnWidth={150}
+          totalRows={rows.length}
+          totalColumns={100}
+          rowGap={5}
+          columnGap={10}
         >
-          {[...Array(100)].map((_, index) => (
-            <div
-              style={{
-                border: "1px solid white",
-                height: "100%",
-                width: "100px",
-              }}
-              key={index}
-            >
-              {index}
+          {rows.map((_) => (
+            <div key={_.id} style={{ width: "100%", height: "100px" }}>
+              {_.items.map((item) => (
+                <div
+                  key={item.id}
+                  style={{
+                    width: "150px",
+                    height: "100px",
+                    backgroundColor: "blue",
+                  }}
+                >
+                  {item.name}
+                </div>
+              ))}
             </div>
           ))}
-        </FixedList>
-      </section>
-
-      <section>
-        <DynamicList
-          totalElements={mockedRandomData.length}
-          getItemSize={(index) => fieldTypeMap[mockedRandomData[index].type]}
-          orientation='horizontal'
-        >
-          {mockedRandomData.map((data) => (
-            <div
-              style={{
-                border: "1px solid white",
-                height: "100px",
-                width: fieldTypeMap[data.type],
-              }}
-              key={data.id}
-            >
-              {`${data.type} - ${data.name}`}
-            </div>
-          ))}
-        </DynamicList>
+        </VirtualizedGrid>
       </section>
     </main>
   );
