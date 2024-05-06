@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
-import { DynamicListProps } from "./types";
+import { DynamicListProps } from "../FixedList/types";
 import useElementSize from "../../hooks/use-element-size/useElementSize";
-import styles from "./styles.module.css";
+import styles from "../styles.module.css";
 import calculateNodesPosition from "../../functions/calculateNodesPosition";
 import findFirstAfter from "../../functions/findFirstAfter";
 
@@ -90,6 +90,4 @@ function List(dynamicListProps: DynamicListProps) {
   );
 }
 
-const DynamicList = React.memo(List);
-
-export default DynamicList;
+export const DynamicList = React.memo(List);

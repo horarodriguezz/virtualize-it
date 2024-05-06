@@ -1,6 +1,6 @@
 import "./App.css";
-import StaticList from "./components/List/List";
-import DinamicList from "./components/List/DynamicList";
+import { FixedList } from "./components/FixedList/FixedList";
+import { DynamicList } from "./components/DynamicList/DynamicList";
 
 const fieldTypeMap = {
   TEXT: 150,
@@ -27,7 +27,7 @@ function App() {
   return (
     <main>
       <section>
-        <StaticList
+        <FixedList
           itemSize={100}
           totalElements={100}
           gap={20}
@@ -45,11 +45,11 @@ function App() {
               {index}
             </div>
           ))}
-        </StaticList>
+        </FixedList>
       </section>
 
       <section>
-        <DinamicList
+        <DynamicList
           totalElements={mockedRandomData.length}
           getItemSize={(index) => fieldTypeMap[mockedRandomData[index].type]}
           orientation='horizontal'
@@ -66,7 +66,7 @@ function App() {
               {`${data.type} - ${data.name}`}
             </div>
           ))}
-        </DinamicList>
+        </DynamicList>
       </section>
     </main>
   );

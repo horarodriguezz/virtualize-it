@@ -29,7 +29,7 @@ export interface BaseListProps {
   gap?: number;
 }
 
-export interface StaticListProps extends BaseListProps {
+export interface FixedListProps extends BaseListProps {
   /**
    * @prop rowHeight - The height of each item in the list
    */

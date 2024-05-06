@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
 
-import { StaticListProps } from "./types";
+import { FixedListProps } from "./types";
 
-import styles from "./styles.module.css";
+import styles from "../styles.module.css";
 import useElementSize from "../../hooks/use-element-size/useElementSize";
 
-function List(dynamicListProps: StaticListProps) {
+function List(dynamicListProps: FixedListProps) {
   const {
     children,
     width,
@@ -90,5 +90,4 @@ function List(dynamicListProps: StaticListProps) {
   );
 }
 
-const StaticList = React.memo(List);
-export default StaticList;
+export const FixedList = React.memo(List);
