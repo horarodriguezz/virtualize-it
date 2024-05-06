@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { DynamicListProps } from "../FixedList/types";
+import { DynamicListProps } from "../types";
 import useElementSize from "../../hooks/use-element-size/useElementSize";
 import styles from "../styles.module.css";
 import calculateNodesPosition from "../../functions/calculateNodesPosition";
@@ -64,7 +64,7 @@ function List(dynamicListProps: DynamicListProps) {
     .slice(startNode, endNode + 1)
     .map((c, index) =>
       React.cloneElement(c, {
-        key: index,
+        ...c.props,
         style: {
           ...c.props.style,
           position: "absolute",

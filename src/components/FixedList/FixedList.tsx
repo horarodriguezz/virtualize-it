@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 
-import { FixedListProps } from "./types";
+import { FixedListProps } from "../types";
 
 import styles from "../styles.module.css";
 import useElementSize from "../../hooks/use-element-size/useElementSize";
@@ -22,12 +22,14 @@ function List(dynamicListProps: FixedListProps) {
     elementRef,
   ] = useElementSize();
 
+  const isVertical = orientation === "vertical";
+
   const containerSize = useMemo(
-    () => (orientation === "vertical" ? containerHeight : containerWidth),
-    [containerHeight, containerWidth, orientation]
+    () => (isVertical ? containerHeight : containerWidth),
+    [containerHeight, containerWidth, isVertical]
   );
 
-  const scroll = orientation === "vertical" ? scrollTop : scrollLeft;
+  const scroll = isVertical ? scrollTop : scrollLeft;
 
   const containerStyle = useMemo(
     () => ({
@@ -41,11 +43,11 @@ function List(dynamicListProps: FixedListProps) {
     const wrapperHeight = totalElements * itemSize + (totalElements - 1) * gap;
 
     return {
-      height: orientation === "vertical" ? wrapperHeight : "100%",
-      width: orientation === "horizontal" ? wrapperHeight : "100%",
-      flexDirection: orientation === "horizontal" ? "row" : "column",
+      height: isVertical ? wrapperHeight : "100%",
+      width: !isVertical ? wrapperHeight : "100%",
+      flexDirection: !isVertical ? "row" : "column",
     };
-  }, [totalElements, itemSize, gap, orientation]);
+  }, [totalElements, itemSize, gap, isVertical]);
 
   const totalItemSize = itemSize + gap;
 
@@ -63,16 +65,15 @@ function List(dynamicListProps: FixedListProps) {
     .slice(startNode, startNode + nodesCount)
     .map((child, index) =>
       React.cloneElement(child, {
-        key: index,
+        ...child.props,
         style: {
           ...child.props.style,
           position: "absolute",
           top: 0,
           left: 0,
-          transform:
-            orientation === "vertical"
-              ? `translateY(${(startNode + index) * totalItemSize}px)`
-              : `translateX(${(startNode + index) * totalItemSize}px)`,
+          transform: isVertical
+            ? `translateY(${(startNode + index) * totalItemSize}px)`
+            : `translateX(${(startNode + index) * totalItemSize}px)`,
         },
       })
     );
