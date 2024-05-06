@@ -24,6 +24,7 @@ export interface BaseListProps {
 
   /**
    * @prop gap - The gap between each item in the list
+   * @default 0
    */
   gap?: number;
 }
@@ -33,4 +34,12 @@ export interface StaticListProps extends BaseListProps {
    * @prop rowHeight - The height of each item in the list
    */
   rowHeight: number;
+}
+
+export interface DynamicListProps extends BaseListProps {
+  /**
+   * @prop getItemSize - A function that returns the height of each item in the list
+   * @param index - The index of the item in the list
+   */
+  getItemSize: (index: number) => number;
 }

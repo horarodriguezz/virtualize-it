@@ -26,16 +26,23 @@ function List(dynamicListProps: StaticListProps) {
     [width, height]
   );
 
-  const wrapperHeight = totalElements * rowHeight + (totalElements - 1) * gap;
+  const wrapperStyles = useMemo(
+    () => ({
+      height: totalElements * rowHeight + (totalElements - 1) * gap,
+    }),
+    [totalElements, rowHeight, gap]
+  );
+
+  const itemHeight = rowHeight + gap;
 
   const startNode = Math.max(
     0,
-    Math.floor(scrollTop / rowHeight) - overscanCount
+    Math.floor(scrollTop / itemHeight) - overscanCount
   );
 
   const nodesCount = Math.min(
     totalElements - startNode,
-    Math.ceil(containerHeight / rowHeight) + overscanCount * 2
+    Math.ceil(containerHeight / itemHeight) + overscanCount * 2
   );
 
   const visibleNodes = children
@@ -48,7 +55,7 @@ function List(dynamicListProps: StaticListProps) {
           position: "absolute",
           top: 0,
           left: 0,
-          transform: `translateY(${(startNode + index) * rowHeight}px)`,
+          transform: `translateY(${(startNode + index) * itemHeight}px)`,
           height: `${rowHeight}px`,
         },
       })
@@ -60,12 +67,7 @@ function List(dynamicListProps: StaticListProps) {
       className={styles["list-root"]}
       ref={elementRef}
     >
-      <div
-        style={{
-          height: wrapperHeight,
-        }}
-        className={styles["list-root__wrapper"]}
-      >
+      <div style={wrapperStyles} className={styles["list-root__wrapper"]}>
         {visibleNodes}
       </div>
     </div>

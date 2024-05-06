@@ -6,17 +6,22 @@ body {
   height: 100vh;
   overflow: hidden;
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 body main {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  gap: 30px;
+  margin-top: 50px;
+}
+
+body main section {
+  display: flex;
   width: 500px;
   height: 750px;
   border: 1px solid white;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
