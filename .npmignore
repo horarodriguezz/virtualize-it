@@ -2,3 +2,5 @@ App.tsx
 App.css
 main.tsx
 vite-env.d.ts
+TestingDummyComponent.tsx
+publish.workflow.yml
