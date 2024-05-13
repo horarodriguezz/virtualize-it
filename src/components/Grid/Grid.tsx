@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { VirtualizedGridProps } from "../types";
-import useElementSize from "../../hooks/use-element-size/useElementSize";
+import useScrollMetrics from "../../hooks/use-scroll-metrics/useScrollMetrics";
 
 function Grid(props: VirtualizedGridProps) {
   const {
@@ -19,7 +19,7 @@ function Grid(props: VirtualizedGridProps) {
   const [
     { width: containerWidth, height: containerHeight, scrollLeft, scrollTop },
     ref,
-  ] = useElementSize();
+  ] = useScrollMetrics();
 
   const containerStyle = useMemo(
     () => ({

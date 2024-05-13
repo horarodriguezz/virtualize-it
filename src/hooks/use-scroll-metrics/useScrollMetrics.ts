@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ElementSize, UseElementSizeResult } from "./types";
+import { ScrollMetrics, ScrollMetricsResult } from "./types";
 
-const initialSize: ElementSize = {
+const initialSize: ScrollMetrics = {
   width: 0,
   height: 0,
   scrollTop: 0,
@@ -12,11 +12,11 @@ const initialSize: ElementSize = {
  * @description this hook is used to get the size of an element, it will return the width and height of the element
  * and it will also update the size of the element when the window is resized
  */
-export default function useElementSize(): UseElementSizeResult {
+export default function useScrollMetrics(): ScrollMetricsResult {
   const elementRef = React.useRef<HTMLDivElement>(null);
   const animationFrame = React.useRef<number | null>(null);
 
-  const [size, setSize] = useState<ElementSize>(initialSize);
+  const [size, setSize] = useState<ScrollMetrics>(initialSize);
 
   const handleResize = useCallback(() => {
     if (animationFrame?.current) {

@@ -39,8 +39,9 @@ It provides the following components:
 | height        | number                    | "100%"     | The height of the container                                  |          |
 | overscanCount | number                    | 3          | The number of elements to render outside of the visible area |          |
 | gap           | number                    | 0          | The gap between each item in the list                        |          |
-| itemSize      | number                    | -          | The height of each item in the list                          |          |
+| itemSize      | number                    | -          | The size of each item in the list                            |          |
 | orientation   | "vertical" \| "horizontal | "vertical" | The orientation of the list                                  |          |
+| reverse       | boolean                   | false      | Indicates if the list should start at the bottom             |          |
 
 <br>
 
@@ -102,12 +103,13 @@ function MainComponent() {
 | ------------- | ------------- | ---------- | ------------------------------------------------------------ | -------- |
 | children      | JSX.Element[] | -          | The children to render in the list                           | ✓        |
 | totalElements | number        | -          | The total number of elements in the list                     | ✓        |
-| getItemSize   | function      | -          | A function that returns the height of each item              | ✓        |
+| getItemSize   | function      | -          | A function that returns the size of each item                | ✓        |
 | width         | number        | "100%"     | The width of the container                                   |          |
 | height        | number        | "100%"     | The height of the container                                  |          |
 | overscanCount | number        | 3          | The number of elements to render outside of the visible area |          |
 | gap           | number        | 0          | The gap between each item in the list                        |          |
 | orientation   | string        | "vertical" | The orientation of the list                                  |          |
+| reverse       | boolean       | false      | Indicates if the list should start at the bottom             |          |
 
 <br>
 
@@ -263,5 +265,5 @@ function MainComponent() {
 ## Caveats
 
 - All three components require a consistent key for each item, don't use the index from the map function. If your data doesn't have a unique identifier, you can generate one using a library like `uuid` or `nanoid`. Just map the data before passing it to the component.
-- The height of the `DynamicList` is not "fully" dynamic. The component needs the user to supply a function that returns the height of each item
+- The calculated size of the `DynamicList` is not "fully" dynamic. The component needs the user to supply a function that returns the size of each item
   based on the index. This is because calculating the height/width of each item automatically requires rendering them off-screen, which can be inefficient for large datasets.

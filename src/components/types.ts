@@ -36,6 +36,13 @@ export interface FixedListProps extends BaseListProps {
   itemSize: number;
 
   orientation?: ListOrientation;
+
+  /**
+   * @prop reverse - In vertical orientation, the list will be rendered with the scroll position at the bottom and virtualized items will be rendered from the bottom to the top.
+   * In horizontal orientation, the list will be rendered with the scroll position at the right and virtualized items will be rendered from the right to the left.
+   * @default false
+   */
+  reverse?: boolean;
 }
 
 export interface DynamicListProps extends BaseListProps {
@@ -46,6 +53,13 @@ export interface DynamicListProps extends BaseListProps {
   getItemSize: (index: number) => number;
 
   orientation?: ListOrientation;
+
+  /**
+   * @prop reverse - In vertical orientation, the list will be rendered with the scroll position at the bottom and virtualized items will be rendered from the bottom to the top.
+   * In horizontal orientation, the list will be rendered with the scroll position at the right and virtualized items will be rendered from the right to the left.
+   * @default false
+   */
+  reverse?: boolean;
 }
 
 export type ListOrientation = "vertical" | "horizontal";
