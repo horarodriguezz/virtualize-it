@@ -6,8 +6,6 @@ const initialSize: ScrollMetrics = {
   height: 0,
   scrollTop: 0,
   scrollLeft: 0,
-  scrollRight: 0,
-  scrollBottom: 0,
 };
 
 /**
@@ -32,10 +30,6 @@ export default function useScrollMetrics(): ScrollMetricsResult {
           height: elementRef.current.offsetHeight,
           scrollTop: elementRef.current.scrollTop,
           scrollLeft: elementRef.current.scrollLeft,
-          scrollRight:
-            elementRef.current.scrollWidth - elementRef.current.scrollLeft,
-          scrollBottom:
-            elementRef.current.scrollHeight - elementRef.current.scrollTop,
         });
       }
     });

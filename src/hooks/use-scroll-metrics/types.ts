@@ -18,16 +18,6 @@ export interface ScrollMetrics {
    * The scroll position from the left of the element
    */
   scrollLeft: number;
-
-  /**
-   * The scroll position from the right of the element. This is the result of the scrollWidth - scrollLeft.
-   */
-  scrollRight: number;
-
-  /**
-   * The scroll position from the bottom of the element. This is the result of the scrollHeight - scrollTop.
-   */
-  scrollBottom: number;
 }
 
 export type ScrollMetricsResult = [
