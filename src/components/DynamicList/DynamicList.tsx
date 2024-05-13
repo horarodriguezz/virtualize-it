@@ -3,6 +3,7 @@ import { DynamicListProps } from "../types";
 import useScrollMetrics from "../../hooks/use-scroll-metrics/useScrollMetrics";
 import calculateNodesPosition from "../../functions/calculateNodesPosition";
 import findFirstAfter from "../../functions/findFirstAfter";
+import useInitialScroll from "../../hooks/use-initial-scroll/useInitialScroll";
 
 function List(dynamicListProps: DynamicListProps) {
   const {
@@ -12,6 +13,7 @@ function List(dynamicListProps: DynamicListProps) {
     gap,
     overscanCount = 3,
     orientation = "vertical",
+    reverse = false,
     getItemSize,
   } = dynamicListProps;
 
@@ -79,6 +81,8 @@ function List(dynamicListProps: DynamicListProps) {
         },
       })
     );
+
+  useInitialScroll({ elementRef, orientation, reverse });
 
   return (
     <div style={containerStyle} className={"list-root"} ref={elementRef}>
