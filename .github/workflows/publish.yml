@@ -1,11 +1,13 @@
 name: Publish workflow
 run-name: Publish to NPM
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
 jobs:
   publish:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,8 +20,20 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
+      - name: Get PR labels
+        id: pr
+        run: |
+          PR_LABELS=$(gh pr view https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }} --json labels -q ".labels[].name")
+          echo "PR_LABELS=$PR_LABELS" >> $GITHUB_ENV
       - name: Increase version
-        run: npm version patch
+        run: |
+          if [[ "${{ env.PR_LABELS }}" == *"major"* ]]; then
+            npm version major
+          elif [[ "${{ env.PR_LABELS }}" == *"minor"* ]]; then
+            npm version minor
+          elif [[ "${{ env.PR_LABELS }}" == *"patch"* ]]; then
+            npm version patch
+          fi
       - name: Publish
         run: npm publish
         env:
