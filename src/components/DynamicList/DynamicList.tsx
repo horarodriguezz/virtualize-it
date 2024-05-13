@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { DynamicListProps } from "../types";
-import useElementSize from "../../hooks/use-element-size/useElementSize";
+import useScrollMetrics from "../../hooks/use-scroll-metrics/useScrollMetrics";
 import calculateNodesPosition from "../../functions/calculateNodesPosition";
 import findFirstAfter from "../../functions/findFirstAfter";
 
@@ -20,7 +20,7 @@ function List(dynamicListProps: DynamicListProps) {
   const [
     { scrollTop, scrollLeft, width: containerWidth, height: containerHeight },
     elementRef,
-  ] = useElementSize();
+  ] = useScrollMetrics();
 
   const nodesPosition = calculateNodesPosition(children, gap, getItemSize);
 
