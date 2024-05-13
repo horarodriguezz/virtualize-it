@@ -25,6 +25,8 @@ jobs:
         run: |
           PR_LABELS=$(gh pr view https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }} --json labels -q ".labels[].name")
           echo "PR_LABELS=$PR_LABELS" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Increase version
         run: |
           if [[ "${{ env.PR_LABELS }}" == *"major"* ]]; then
