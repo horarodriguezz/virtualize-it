@@ -2,7 +2,9 @@ import React, { useMemo } from "react";
 
 import { FixedListProps } from "../types";
 
-import useElementSize from "../../hooks/use-element-size/useElementSize";
+import useScrollMetrics from "../../hooks/use-scroll-metrics/useScrollMetrics";
+import useInitialScroll from "../../hooks/use-initial-scroll/useInitialScroll";
+import getListEnds from "../../functions/getListEnds";
 
 function List(dynamicListProps: FixedListProps) {
   const {
@@ -14,12 +16,16 @@ function List(dynamicListProps: FixedListProps) {
     itemSize,
     gap = 0,
     orientation = "vertical",
+    reverse = false,
   } = dynamicListProps;
 
-  const [
-    { scrollTop, scrollLeft, height: containerHeight, width: containerWidth },
-    elementRef,
-  ] = useElementSize();
+  const [metrics, elementRef] = useScrollMetrics();
+  const {
+    height: containerHeight,
+    width: containerWidth,
+    scrollTop,
+    scrollLeft,
+  } = metrics;
 
   const isVertical = orientation === "vertical";
 
@@ -28,7 +34,32 @@ function List(dynamicListProps: FixedListProps) {
     [containerHeight, containerWidth, isVertical]
   );
 
-  const scroll = isVertical ? scrollTop : scrollLeft;
+  const scrollDistance = isVertical ? scrollTop : scrollLeft;
+
+  const totalItemSize = itemSize + gap;
+
+  const { start, end } = getListEnds({
+    itemSize: totalItemSize,
+    listSize: containerSize,
+    overscan: overscanCount,
+    scrollDistance,
+    totalElements,
+  });
+
+  const visibleNodes = children.slice(start, end + 1).map((child, index) =>
+    React.cloneElement(child, {
+      ...child.props,
+      style: {
+        ...child.props.style,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        transform: isVertical
+          ? `translateY(${(start + index) * totalItemSize}px)`
+          : `translateX(${(start + index) * totalItemSize}px)`,
+      },
+    })
+  );
 
   const containerStyle = useMemo(
     () => ({
@@ -52,34 +83,7 @@ function List(dynamicListProps: FixedListProps) {
     };
   }, [totalElements, itemSize, gap, isVertical]);
 
-  const totalItemSize = itemSize + gap;
-
-  const startNode = Math.max(
-    0,
-    Math.floor(scroll / totalItemSize) - overscanCount
-  );
-
-  const nodesCount = Math.min(
-    totalElements - startNode,
-    Math.ceil(containerSize / totalItemSize) + overscanCount * 2
-  );
-
-  const visibleNodes = children
-    .slice(startNode, startNode + nodesCount)
-    .map((child, index) =>
-      React.cloneElement(child, {
-        ...child.props,
-        style: {
-          ...child.props.style,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          transform: isVertical
-            ? `translateY(${(startNode + index) * totalItemSize}px)`
-            : `translateX(${(startNode + index) * totalItemSize}px)`,
-        },
-      })
-    );
+  useInitialScroll({ elementRef, orientation, reverse });
 
   return (
     <div style={containerStyle} className={"list_root"} ref={elementRef}>
