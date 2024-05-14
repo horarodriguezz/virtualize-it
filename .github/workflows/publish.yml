@@ -38,8 +38,6 @@ jobs:
           fi
       - name: Publish
         run: npm publish
-        dependencies:
-          - Build
-          - Increase version
+        needs: [Build, Increase version]
         env:
           NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
