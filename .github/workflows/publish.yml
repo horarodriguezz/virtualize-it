@@ -19,8 +19,6 @@ jobs:
           node-version: "14"
       - name: Install dependencies
         run: npm install
-      - name: Build
-        run: npm run build
       - name: Get PR labels
         id: get_labels
         run: echo "PR_LABELS=$(jq -r '.pull_request.labels | map(.name) | join(",")' <<< '${{ toJson(github.event) }}')" >> $GITHUB_ENV
@@ -38,6 +36,9 @@ jobs:
             exit 1
           fi
       - name: Publish
-        run: npm publish
+        if: steps.build.outcome == 'success' && steps.increase_version.outcome == 'success'
+        run: |
+          sleep 5;
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
