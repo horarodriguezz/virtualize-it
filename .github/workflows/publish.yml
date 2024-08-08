@@ -1,13 +1,14 @@
 name: Publish workflow
 run-name: Publish to NPM
+
 on:
   pull_request:
     types: [closed]
     branches:
       - main
+
 jobs:
-  publish:
-    if: github.event.pull_request.merged == true
+  setup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,27 +19,33 @@ jobs:
           node-version: "14"
       - name: Install dependencies
         run: npm install
+
+  build:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
       - name: Build
         run: npm run build
-      - name: Get PR labels
-        id: pr
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          PR_LABELS=$(gh pr view https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }} --json labels -q ".labels[].name")
-          echo "PR_LABELS=$PR_LABELS" >> $GITHUB_ENV
-      - name: Increase version
+
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: increase_version
         id: increase_version
         run: |
-          if [[ "${{ env.PR_LABELS }}" == *"major"* ]]; then
+          if [[ "${{ github.event.pull_request.labels.name }}" == *"major"* ]]; then
             npm version major --no-git-tag-version
-          elif [[ "${{ env.PR_LABELS }}" == *"minor"* ]]; then
+          elif [[ "${{ github.event.pull_request.labels.name }}" == *"minor"* ]]; then
             npm version minor --no-git-tag-version
-          elif [[ "${{ env.PR_LABELS }}" == *"patch"* ]]; then
+          elif [[ "${{ github.event.pull_request.labels.name }}" == *"patch"* ]]; then
             npm version patch --no-git-tag-version
           fi
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [build, version]
+    steps:
       - name: Publish
-        if: steps.build.outcome == 'success' && steps.increase_version.outcome == 'success'
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
