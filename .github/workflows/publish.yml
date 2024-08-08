@@ -28,6 +28,7 @@ jobs:
           PR_LABELS=$(gh pr view https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }} --json labels -q ".labels[].name")
           echo "PR_LABELS=$PR_LABELS" >> $GITHUB_ENV
       - name: Increase version
+        id: increase_version
         run: |
           if [[ "${{ env.PR_LABELS }}" == *"major"* ]]; then
             npm version major --no-git-tag-version
@@ -37,7 +38,7 @@ jobs:
             npm version patch --no-git-tag-version
           fi
       - name: Publish
+        if: steps.build.outcome == 'success' && steps.increase_version.outcome == 'success'
         run: npm publish
-        needs: [Build, Increase version]
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
