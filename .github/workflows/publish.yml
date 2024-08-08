@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  setup:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,32 +19,24 @@ jobs:
           node-version: "14"
       - name: Install dependencies
         run: npm install
-
-  build:
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
       - name: Build
         run: npm run build
-
-  version:
-    runs-on: ubuntu-latest
-    steps:
+      - name: Get PR labels
+        id: get_labels
+        run: echo "PR_LABELS=$(jq -r '.pull_request.labels | map(.name) | join(",")' <<< '${{ toJson(github.event) }}')" >> $GITHUB_ENV
       - name: increase_version
         id: increase_version
         run: |
-          if [[ "${{ github.event.pull_request.labels.name }}" == *"major"* ]]; then
+          if [[ "${{ env.PR_LABELS }}" == *"major"* ]]; then
             npm version major --no-git-tag-version
-          elif [[ "${{ github.event.pull_request.labels.name }}" == *"minor"* ]]; then
+          elif [[ "${{ env.PR_LABELS }}" == *"minor"* ]]; then
             npm version minor --no-git-tag-version
-          elif [[ "${{ github.event.pull_request.labels.name }}" == *"patch"* ]]; then
+          elif [[ "${{ env.PR_LABELS }}" == *"patch"* ]]; then
             npm version patch --no-git-tag-version
+          else
+            echo "Error: No version tag (major, minor, patch) found in PR labels"
+            exit 1
           fi
-
-  publish:
-    runs-on: ubuntu-latest
-    needs: [build, version]
-    steps:
       - name: Publish
         run: npm publish
         env:
