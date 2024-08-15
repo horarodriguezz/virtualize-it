@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 TestingDummyComponent.tsx
+index.html
+App.tsx
+main.tsx
+App.css
