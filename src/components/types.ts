@@ -74,7 +74,7 @@ export interface VirtualizedGridProps
   /**
    * @prop columnWidth - The width of each column in the grid
    */
-  columnWidth: number;
+  columnWidth?: number;
 
   /**
    * @prop totalRows - The total number of rows in the grid
@@ -84,7 +84,7 @@ export interface VirtualizedGridProps
   /**
    * @prop totalColumns - The total number of columns in the grid
    */
-  totalColumns: number;
+  totalColumns?: number;
 
   /**
    * @prop rowGap - The gap between each row in the grid
@@ -109,4 +109,12 @@ export interface VirtualizedGridProps
    * @default 1
    */
   columnOverscanCount?: number;
+}
+
+export interface BoxProps {
+  children?: React.ReactNode;
+
+  isVertical?: boolean;
+
+  offset?: number;
 }

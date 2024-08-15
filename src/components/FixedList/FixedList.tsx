@@ -1,10 +1,13 @@
-import React, { useMemo } from "react";
+import React from "react";
 
 import { FixedListProps } from "../types";
 
 import useScrollMetrics from "../../hooks/use-scroll-metrics/useScrollMetrics";
 import useInitialScroll from "../../hooks/use-initial-scroll/useInitialScroll";
 import getListEnds from "../../functions/getListEnds";
+import Box from "../Box";
+import getContainerStyles from "../../functions/styles/getContainerStyles";
+import getWrapperStyles from "../../functions/styles/getWrapperStyles";
 
 function List(dynamicListProps: FixedListProps) {
   const {
@@ -19,7 +22,10 @@ function List(dynamicListProps: FixedListProps) {
     reverse = false,
   } = dynamicListProps;
 
+  const isVertical = orientation === "vertical";
+
   const [metrics, elementRef] = useScrollMetrics();
+
   const {
     height: containerHeight,
     width: containerWidth,
@@ -27,16 +33,15 @@ function List(dynamicListProps: FixedListProps) {
     scrollLeft,
   } = metrics;
 
-  const isVertical = orientation === "vertical";
+  useInitialScroll({ elementRef, orientation, reverse });
 
-  const containerSize = useMemo(
-    () => (isVertical ? containerHeight : containerWidth),
-    [containerHeight, containerWidth, isVertical]
-  );
+  const containerSize = isVertical ? containerHeight : containerWidth;
 
   const scrollDistance = isVertical ? scrollTop : scrollLeft;
 
   const totalItemSize = itemSize + gap;
+
+  const wrapperSize = totalElements * itemSize + (totalElements - 1) * gap;
 
   const { start, end } = getListEnds({
     itemSize: totalItemSize,
@@ -46,49 +51,25 @@ function List(dynamicListProps: FixedListProps) {
     totalElements,
   });
 
-  const visibleNodes = children.slice(start, end + 1).map((child, index) =>
-    React.cloneElement(child, {
-      ...child.props,
-      style: {
-        ...child.props.style,
-        position: "absolute",
-        top: 0,
-        left: 0,
-        transform: isVertical
-          ? `translateY(${(start + index) * totalItemSize}px)`
-          : `translateX(${(start + index) * totalItemSize}px)`,
-      },
-    })
-  );
-
-  const containerStyle = useMemo(
-    () => ({
-      width: width ?? "100%",
-      height: height ?? "100%",
-      overflow: "auto",
-    }),
-    [width, height]
-  );
-
-  const wrapperStyles = useMemo((): React.CSSProperties => {
-    const wrapperSize = totalElements * itemSize + (totalElements - 1) * gap;
-
-    return {
-      height: isVertical ? wrapperSize : "100%",
-      width: !isVertical ? wrapperSize : "100%",
-      flexDirection: !isVertical ? "row" : "column",
-      display: "flex",
-      position: "relative",
-      overflow: "hidden",
-    };
-  }, [totalElements, itemSize, gap, isVertical]);
-
-  useInitialScroll({ elementRef, orientation, reverse });
-
   return (
-    <div style={containerStyle} className={"list_root"} ref={elementRef}>
-      <div style={wrapperStyles} className={"list-root__wrapper"}>
-        {visibleNodes}
+    <div
+      style={getContainerStyles({ width, height })}
+      className={"list-root"}
+      ref={elementRef}
+    >
+      <div
+        style={getWrapperStyles({ isVertical, totalSize: wrapperSize })}
+        className={"list-root__wrapper"}
+      >
+        {children.slice(start, end + 1).map((child, index) => (
+          <Box
+            key={index}
+            isVertical={isVertical}
+            offset={(start + index) * totalItemSize}
+          >
+            {child}
+          </Box>
+        ))}
       </div>
     </div>
   );
