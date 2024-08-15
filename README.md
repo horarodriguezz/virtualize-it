@@ -202,9 +202,9 @@ function MainComponent() {
 | Prop                | Type   | Default | Description                                                 | Required |
 | ------------------- | ------ | ------- | ----------------------------------------------------------- | -------- |
 | rowHeight           | number | -       | The height of each row in the grid                          | ✓        |
-| columnWidth         | number | -       | The width of each column in the grid                        | ✓        |
+| columnWidth         | number | -       | The width of each column in the grid                        |          |
 | totalRows           | number | -       | The total number of rows in the grid                        | ✓        |
-| totalColumns        | number | -       | The total number of columns in the grid                     | ✓        |
+| totalColumns        | number | -       | The total number of columns in the grid                     |          |
 | width               | number | "100%"  | The width of the container                                  |          |
 | height              | number | "100%"  | The height of the container                                 |          |
 | rowOverscanCount    | number | 3       | The number of rows to render outside of the visible area    |          |
@@ -218,6 +218,8 @@ function MainComponent() {
 
 The `VirtualizedGrid` component is used to render a grid of items where each item has a fixed height/width.
 The children of the `VirtualizedGrid` component should be a 2D array where each element in the outer array represents a row and each element in the inner array represents a column.
+
+If the `totalColumns` or `columnWidth` props are not provided the component will behave as a FixedList. Also if the children of each row element are not an array the component will behave as a FixedList.
 
 ```tsx
 import { VirtualizedGrid } from "virtualize-it";
@@ -264,6 +266,5 @@ function MainComponent() {
 
 ## Caveats
 
-- All three components require a consistent key for each item, don't use the index from the map function. If your data doesn't have a unique identifier, you can generate one using a library like `uuid` or `nanoid`. Just map the data before passing it to the component.
 - The calculated size of the `DynamicList` is not "fully" dynamic. The component needs the user to supply a function that returns the size of each item
   based on the index. This is because calculating the height/width of each item automatically requires rendering them off-screen, which can be inefficient for large datasets.
