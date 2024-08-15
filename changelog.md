@@ -14,3 +14,4 @@
 
 - [`2d936cb`](https://github.com/horarodriguezz/virtualize-it/commit/2d936cb94e47707621718f0d80193e5d4341e99d) modified .gitIgnore
 - [`2b97b7`](https://github.com/horarodriguezz/virtualize-it/commit/2b97b7115b2b5a0d50e76c63d612afb8811649ff) abstracted container and wrapper styles
+- [`4af490`](https://github.com/horarodriguezz/virtualize-it/commit/4af49019457b4c465945fe7b006e3045e7e572d5) added changelog.md
