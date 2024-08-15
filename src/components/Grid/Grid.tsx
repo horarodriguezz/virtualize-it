@@ -1,6 +1,8 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { VirtualizedGridProps } from "../types";
 import useScrollMetrics from "../../hooks/use-scroll-metrics/useScrollMetrics";
+import getContainerStyles from "../../functions/styles/getContainerStyles";
+import Box from "../Box";
 
 function Grid(props: VirtualizedGridProps) {
   const {
@@ -9,6 +11,7 @@ function Grid(props: VirtualizedGridProps) {
     rowHeight,
     columnWidth,
     totalRows,
+    totalColumns = 0,
     rowGap = 0,
     columnGap = 0,
     rowOverscanCount = 3,
@@ -21,20 +24,14 @@ function Grid(props: VirtualizedGridProps) {
     ref,
   ] = useScrollMetrics();
 
-  const containerStyle = useMemo(
-    () => ({
-      width: width ?? "100%",
-      height: height ?? "100%",
-      overflow: "auto",
-    }),
-    [width, height]
-  );
-
   const wrapperHeight = totalRows * rowHeight + (totalRows - 1) * rowGap;
-  const wrapperWidth = totalRows * columnWidth + (totalRows - 1) * columnGap;
+  const wrapperWidth =
+    columnWidth && totalColumns
+      ? totalColumns * columnWidth + (totalRows - 1) * columnGap
+      : undefined;
 
   const totalRowHeight = rowHeight + rowGap;
-  const totalColumnWidth = columnWidth + columnGap;
+  const totalColumnWidth = (columnWidth ?? 0) + columnGap;
 
   const startRow = Math.max(
     0,
@@ -51,47 +48,22 @@ function Grid(props: VirtualizedGridProps) {
   );
 
   const endColumn = Math.min(
-    totalRows - 1,
+    totalColumns - 1,
     startColumn +
       Math.ceil(containerWidth / totalColumnWidth) +
       columnOverscanCount
   );
 
-  const visibleNodes = children.slice(startRow, endRow + 1).map((c, rowIndex) =>
-    React.cloneElement(c, {
-      ...c.props,
-      style: {
-        ...c.props.style,
-        position: "absolute",
-        top: 0,
-        left: 0,
-        transform: `translateY(${(startRow + rowIndex) * totalRowHeight}px)`,
-      },
-      children: c.props.children
-        .slice(startColumn, endColumn + 1)
-        .map((child: JSX.Element, colIndex: number) =>
-          React.cloneElement(child, {
-            ...child.props,
-            style: {
-              ...child.props.style,
-              position: "absolute",
-              top: 0,
-              left: 0,
-              transform: `translateX(${
-                (startColumn + colIndex) * totalColumnWidth
-              }px)`,
-            },
-          })
-        ),
-    })
-  );
-
   return (
-    <div ref={ref} style={containerStyle} className={"list-root"}>
+    <div
+      ref={ref}
+      style={getContainerStyles({ width, height })}
+      className={"list-root"}
+    >
       <div
         style={{
           height: wrapperHeight,
-          width: wrapperWidth,
+          width: wrapperWidth ?? "100%",
           flexDirection: "column",
           display: "flex",
           position: "relative",
@@ -99,7 +71,27 @@ function Grid(props: VirtualizedGridProps) {
         }}
         className={"list-root__wrapper"}
       >
-        {visibleNodes}
+        {children.slice(startRow, endRow + 1).map((r, rI) => {
+          const isValidChildren =
+            r.props?.children && Array.isArray(r.props.children);
+
+          return (
+            <Box key={rI} isVertical offset={(startRow + rI) * totalRowHeight}>
+              {isValidChildren
+                ? r.props.children
+                    ?.slice(startColumn, endColumn + 1)
+                    .map((c: JSX.Element, cI: number) => (
+                      <Box
+                        key={cI}
+                        offset={(startColumn + cI) * totalColumnWidth}
+                      >
+                        {c}
+                      </Box>
+                    ))
+                : r}
+            </Box>
+          );
+        })}
       </div>
     </div>
   );
