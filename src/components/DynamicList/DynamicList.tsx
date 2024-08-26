@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { DynamicListProps } from "../types";
 import useScrollMetrics from "../../hooks/use-scroll-metrics/useScrollMetrics";
 import calculateNodesPosition from "../../functions/calculateNodesPosition";
@@ -7,6 +7,7 @@ import useInitialScroll from "../../hooks/use-initial-scroll/useInitialScroll";
 import Box from "../Box";
 import getContainerStyles from "../../functions/styles/getContainerStyles";
 import getWrapperStyles from "../../functions/styles/getWrapperStyles";
+import getValidChildren from "../../functions/getValidChildren";
 
 function List(dynamicListProps: DynamicListProps) {
   const {
@@ -20,9 +21,16 @@ function List(dynamicListProps: DynamicListProps) {
     getItemSize,
   } = dynamicListProps;
 
+  const validChildren = useMemo(() => getValidChildren(children), [children]);
+
+  console.log("validChildren", validChildren);
+
   const isVertical = orientation === "vertical";
 
-  const nodesPosition = calculateNodesPosition(children, gap, getItemSize);
+  const nodesPosition = useMemo(
+    () => calculateNodesPosition(validChildren, gap, getItemSize),
+    [validChildren, gap, getItemSize]
+  );
 
   const [
     { scrollTop, scrollLeft, width: containerWidth, height: containerHeight },
@@ -45,7 +53,7 @@ function List(dynamicListProps: DynamicListProps) {
   const lastVisibleNode = findFirstAfter(scroll + containerSize, nodesPosition);
 
   const endNode = Math.min(
-    children.length - 1,
+    validChildren.length - 1,
     lastVisibleNode + overscanCount
   );
 
@@ -59,7 +67,7 @@ function List(dynamicListProps: DynamicListProps) {
         style={getWrapperStyles({ isVertical, totalSize: wrapperSize })}
         className={"list-root__wrapper"}
       >
-        {children.slice(startNode, endNode + 1).map((c, index) => (
+        {validChildren.slice(startNode, endNode + 1).map((c, index) => (
           <Box
             key={index}
             isVertical={isVertical}

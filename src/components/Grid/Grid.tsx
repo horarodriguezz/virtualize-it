@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { VirtualizedGridProps } from "../types";
 import useScrollMetrics from "../../hooks/use-scroll-metrics/useScrollMetrics";
 import getContainerStyles from "../../functions/styles/getContainerStyles";
 import Box from "../Box";
+import getValidChildren from "../../functions/getValidChildren";
 
 function Grid(props: VirtualizedGridProps) {
   const {
@@ -18,6 +19,10 @@ function Grid(props: VirtualizedGridProps) {
     columnOverscanCount = 1,
     children,
   } = props;
+
+  const validChildren = useMemo(() => getValidChildren(children), [children]);
+
+  console.log("validChildren", validChildren);
 
   const [
     { width: containerWidth, height: containerHeight, scrollLeft, scrollTop },
@@ -71,9 +76,12 @@ function Grid(props: VirtualizedGridProps) {
         }}
         className={"list-root__wrapper"}
       >
-        {children.slice(startRow, endRow + 1).map((r, rI) => {
+        {validChildren.slice(startRow, endRow + 1).map((r, rI) => {
           const isValidChildren =
-            r.props?.children && Array.isArray(r.props.children);
+            r &&
+            typeof r === "object" &&
+            "props" in r &&
+            Array.isArray(r.props.children);
 
           return (
             <Box key={rI} isVertical offset={(startRow + rI) * totalRowHeight}>

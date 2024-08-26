@@ -1,5 +1,5 @@
 export default function calculateNodesPosition(
-  nodes: Array<JSX.Element>,
+  nodes: React.ReactNode[],
   gap: number | undefined = 0,
   getItemSize: (index: number) => number
 ): number[] {
