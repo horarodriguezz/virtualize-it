@@ -1,1 +1,1 @@
-export default function calculateNodesPosition(nodes: Array<JSX.Element>, gap: number | undefined, getItemSize: (index: number) => number): number[];
+export default function calculateNodesPosition(nodes: React.ReactNode[], gap: number | undefined, getItemSize: (index: number) => number): number[];

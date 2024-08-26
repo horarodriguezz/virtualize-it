@@ -1,5 +1,5 @@
 export interface BaseListProps {
-    children: Array<JSX.Element>;
+    children: Array<React.ReactNode>;
     /**
      * @default "100%"
      */
