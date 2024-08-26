@@ -1,6 +1,7 @@
+import React from "react";
 import { BoxProps } from "./types";
 
-export default function Box(props: BoxProps) {
+function Box(props: BoxProps) {
   const { children, isVertical, offset } = props;
 
   return (
@@ -20,3 +21,5 @@ export default function Box(props: BoxProps) {
     </div>
   );
 }
+
+export default React.memo(Box);
