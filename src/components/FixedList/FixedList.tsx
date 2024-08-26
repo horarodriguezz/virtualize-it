@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { FixedListProps } from "../types";
 
@@ -8,6 +8,7 @@ import getListEnds from "../../functions/getListEnds";
 import Box from "../Box";
 import getContainerStyles from "../../functions/styles/getContainerStyles";
 import getWrapperStyles from "../../functions/styles/getWrapperStyles";
+import getValidChildren from "../../functions/getValidChildren";
 
 function List(dynamicListProps: FixedListProps) {
   const {
@@ -21,6 +22,8 @@ function List(dynamicListProps: FixedListProps) {
     orientation = "vertical",
     reverse = false,
   } = dynamicListProps;
+
+  const validChildren = useMemo(() => getValidChildren(children), [children]);
 
   const isVertical = orientation === "vertical";
 
@@ -61,7 +64,7 @@ function List(dynamicListProps: FixedListProps) {
         style={getWrapperStyles({ isVertical, totalSize: wrapperSize })}
         className={"list-root__wrapper"}
       >
-        {children.slice(start, end + 1).map((child, index) => (
+        {validChildren.slice(start, end + 1).map((child, index) => (
           <Box
             key={index}
             isVertical={isVertical}
